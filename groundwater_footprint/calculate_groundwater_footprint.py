@@ -76,7 +76,7 @@ fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
                                        pcr.windowaverage(fraction_reserved_recharge, 0.5))
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, 0.1)
 # - set minimum value to 0.01
-fraction_reserved_recharge = pcr.max(0.10, fraction_reserved_recharge)
+fraction_reserved_recharge = pcr.max(0.01, fraction_reserved_recharge)
 # - set maximum value to 0.99
 fraction_reserved_recharge = pcr.min(0.99, fraction_reserved_recharge)
 
