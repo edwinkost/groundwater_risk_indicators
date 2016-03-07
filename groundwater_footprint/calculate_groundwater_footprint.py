@@ -111,7 +111,7 @@ for year in range(start_year, end_year + 1, 1):
                                                    useDoy = None,
                                                    cloneMapFileName  = None,\
                                                    LatitudeLongitude = True,\
-                                                   specificFillValue = None):
+                                                   specificFillValue = None)
 areal_groundwater_recharge = pcr.areatotal(groundwater_recharge * cell_area, class_map)/pcr.areatotal(cell_area, class_map)
 # - ignore negative groundwater recharge (due to capillary rise)
 areal_groundwater_recharge = pcr.max(0.0, areal_groundwater_recharge)
