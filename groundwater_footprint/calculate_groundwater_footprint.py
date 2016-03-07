@@ -106,7 +106,7 @@ groundwater_recharge = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
     netcdf_file   = "/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/gwRecharge_annuaTot_output_1981to2010.nc"
-    variable_name = "groundwater_rechargef"
+    variable_name = "groundwater_recharge"
     groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                    useDoy = None,
                                                    cloneMapFileName  = None,\
