@@ -126,6 +126,9 @@ areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_grou
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
                              areal_groundwater_abstraction/(pcr.cover(pcr.max(0.001, areal_groundwater_recharge - areal_groundwater_contribution_to_environmental_flow), 0.001)))
+# fill in the entire cell
+groundwater_stress_map = pcr.ifthen(landmask, \
+                         pcr.areamaximum(groundwater_stress_map, class_map))
 groundwater_stress_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_stress.map"
 pcr.report(groundwater_stress_map, groundwater_stress_map_filename)
 pcr.aguila(groundwater_stress_map)
