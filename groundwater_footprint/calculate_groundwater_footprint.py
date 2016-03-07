@@ -59,8 +59,9 @@ sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/home/sutan101/data/sed_ex
 cell_area = sedimentary_basin * cell_area
 #~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
-# we only use pixels belonging to the sedimentary basin 
-class_map    = pcr.ifthen(sedimentary_basin > 0, class_map)
+# we only use pixels belonging to the sedimentary basin
+class_map_all = class_map
+class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
 fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
@@ -128,7 +129,7 @@ groundwater_stress_map = pcr.ifthen(landmask, \
                              areal_groundwater_abstraction/(pcr.cover(pcr.max(0.001, areal_groundwater_recharge - areal_groundwater_contribution_to_environmental_flow), 0.001)))
 # fill in the entire cell
 groundwater_stress_map = pcr.ifthen(landmask, \
-                         pcr.areamaximum(pcr.cover(groundwater_stress_map, 0.0), class_map))
+                         pcr.areamaximum(groundwater_stress_map, class_map_all))
 groundwater_stress_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_stress.map"
 pcr.report(groundwater_stress_map, groundwater_stress_map_filename)
 pcr.aguila(groundwater_stress_map)
