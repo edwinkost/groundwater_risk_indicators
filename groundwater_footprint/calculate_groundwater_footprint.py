@@ -38,12 +38,17 @@ class_map_default_folder = "/home/sutan101/data/aqueduct_gis_layers/aqueduct_shp
 if class_map_file_name == "state": class_map_file_name = class_map_default_folder + "/Aqueduct_States.map"
 if class_map_file_name == "drainage_unit": class_map_file_name = class_map_default_folder + "/Aqueduct_GDBD.map"
 if class_map_file_name == "aquifer": class_map_file_name = class_map_default_folder + "/why_wgs1984_BUENO.map"
+if class_map_file_name == "country": class_map_file_name = "/home/sutan101/data/country_shp_from_tianyi/World_Polys_High.map"
 
 # reading the class map
 class_map    = pcr.nominal(pcr.uniqueid(landmask))
 if class_map_file_name != "pixel":
 	class_map = vos.readPCRmapClone(class_map_file_name, clone_map, tmp_directory, None, False, None, True, False)
 	class_map = pcr.ifthen(pcr.scalar(class_map) > 0.0, pcr.nominal(class_map)) 
+
+# time selection
+start_year = int(sys.argv[3])
+end_year   = int(sys.argv[4])
  
 # cell_area (unit: m2)
 cell_area = pcr.readmap("/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map") 
@@ -54,8 +59,9 @@ sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/home/sutan101/data/sed_ex
 cell_area = sedimentary_basin * cell_area
 #~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
-# we only use pixels belonging to the sedimentary basin 
-class_map    = pcr.ifthen(sedimentary_basin > 0, class_map)
+# we only use pixels belonging to the sedimentary basin
+class_map_all = class_map
+class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
 fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
@@ -81,12 +87,32 @@ fraction_reserved_recharge = pcr.max(0.10, fraction_reserved_recharge)
 fraction_reserved_recharge = pcr.min(0.75, fraction_reserved_recharge)
 
 # areal_groundwater_abstraction (unit: m/year)
-groundwater_abstraction = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/totalGroundwaterAbstraction_annuaTot_output_1990to2010.map"), 0.0)
+#~ groundwater_abstraction = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/totalGroundwaterAbstraction_annuaTot_output_1990to2010.map"), 0.0)
+groundwater_abstraction = pcr.scalar(0.0)
+for year in range(start_year, end_year + 1, 1):
+    date_input_in_string = str(year) + "-12-31"
+    netcdf_file   = "/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/totalGroundwaterAbstraction_annuaTot_output_1981to2010.nc"
+    variable_name = "total_groundwater_abstraction"
+    groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
+                                                      useDoy = None,
+                                                      cloneMapFileName  = None,\
+                                                      LatitudeLongitude = True,\
+                                                      specificFillValue = None)
 areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction * cell_area, class_map)/pcr.areatotal(cell_area, class_map), 0.0)
 
 # areal groundwater recharge (unit: m/year)
 # cdo command: cdo setunit,m.year-1 -timavg -yearsum -selyear,1990/2010 ../../netcdf/gwRecharge_monthTot_output.nc gwRecharge_annuaTot_output_1990to2010.nc
-groundwater_recharge = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/gwRecharge_annuaTot_output_1990to2010.map"), 0.0) 
+#~ groundwater_recharge = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/gwRecharge_annuaTot_output_1990to2010.map"), 0.0) 
+groundwater_recharge = pcr.scalar(0.0)
+for year in range(start_year, end_year + 1, 1):
+    date_input_in_string = str(year) + "-12-31"
+    netcdf_file   = "/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/gwRecharge_annuaTot_output_1981to2010.nc"
+    variable_name = "groundwater_recharge"
+    groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
+                                                   useDoy = None,
+                                                   cloneMapFileName  = None,\
+                                                   LatitudeLongitude = True,\
+                                                   specificFillValue = None)
 areal_groundwater_recharge = pcr.areatotal(groundwater_recharge * cell_area, class_map)/pcr.areatotal(cell_area, class_map)
 # - ignore negative groundwater recharge (due to capillary rise)
 areal_groundwater_recharge = pcr.max(0.0, areal_groundwater_recharge)
@@ -101,12 +127,15 @@ areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_grou
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
                              areal_groundwater_abstraction/(pcr.cover(pcr.max(0.001, areal_groundwater_recharge - areal_groundwater_contribution_to_environmental_flow), 0.001)))
-groundwater_stress_map_filename = output_directory + "/" + str(sys.argv[2]) + ".groundwater_stress.map"
+# fill in the entire cell
+groundwater_stress_map = pcr.ifthen(landmask, \
+                         pcr.areamaximum(groundwater_stress_map, class_map_all))
+groundwater_stress_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_stress.map"
 pcr.report(groundwater_stress_map, groundwater_stress_map_filename)
 pcr.aguila(groundwater_stress_map)
 
 # groundwater footprint map (km2)
 groundwater_footprint_map = groundwater_stress_map * pcr.cover(pcr.areatotal(cell_area, class_map), 0.0) / (1000. * 1000.)
-groundwater_footprint_map_filename = output_directory + "/" + str(sys.argv[2]) + ".groundwater_footprint.km2.map"
+groundwater_footprint_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_footprint.km2.map"
 pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 pcr.aguila(groundwater_footprint_map)
