@@ -68,7 +68,10 @@ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 #~ fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - at cartesius
 #~ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
-fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/minimum_fraction_reserved_recharge10.5min.map")
+#~ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/minimum_fraction_reserved_recharge10.5min.map")
+
+fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/q90_aqueduct_runs/fraction_reserved_recharge.map")
+
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
                                        pcr.windowaverage(fraction_reserved_recharge, 0.5))
@@ -88,8 +91,8 @@ fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, 0.1)
 # - set minimum value to 0.10
 fraction_reserved_recharge = pcr.max(0.10, fraction_reserved_recharge)
 # - set maximum value to 0.75
-fraction_reserved_recharge = pcr.min(1.00, fraction_reserved_recharge)
-fraction_reserved_recharge = pcr.scalar(0.80)
+fraction_reserved_recharge = pcr.min(0.75, fraction_reserved_recharge)
+#~ fraction_reserved_recharge = pcr.scalar(0.80)
 
 # areal_groundwater_abstraction (unit: m/year)
 #~ groundwater_abstraction = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/totalGroundwaterAbstraction_annuaTot_output_1990to2010.map"), 0.0)
@@ -127,7 +130,7 @@ groundwater_contribution_to_environmental_flow          = pcr.max(0.10, fraction
 groundwater_contribution_to_environmental_flow_filename = output_directory + "/" + "groundwater_contribution_to_environmental_flow.m.per.year.map" 
 pcr.report(pcr.ifthen(landmask, groundwater_contribution_to_environmental_flow), groundwater_contribution_to_environmental_flow_filename)
 areal_groundwater_contribution_to_environmental_flow = pcr.areatotal(groundwater_contribution_to_environmental_flow * cell_area, class_map)/pcr.areatotal(cell_area, class_map) 
-areal_groundwater_contribution_to_environmental_flow = pcr.min(0.80 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
+areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
 
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
