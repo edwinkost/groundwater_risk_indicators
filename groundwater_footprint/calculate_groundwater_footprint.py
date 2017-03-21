@@ -29,16 +29,16 @@ pcr.setclone(clone_map)
 landmask = pcr.defined(pcr.readmap(clone_map))
 
 # class map file name:
-#~ class_map_file_name = "/home/sutan101/data/aqueduct_gis_layers/aqueduct_shp_from_marta/Aqueduct_States.map"
-#~ class_map_file_name = "/home/sutan101/data/aqueduct_gis_layers/aqueduct_shp_from_marta/Aqueduct_GDBD.map"
-#~ class_map_file_name = "/home/sutan101/data/processing_whymap/version_19september2014/major_aquifer_30min.extended.map"
-#~ class_map_file_name = "/home/sutan101/data/processing_whymap/version_19september2014/major_aquifer_30min.map"
+#~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/Aqueduct_States.map"
+#~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/Aqueduct_GDBD.map"
+#~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/processing_whymap/version_19september2014/major_aquifer_30min.extended.map"
+#~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/processing_whymap/version_19september2014/major_aquifer_30min.map"
 class_map_file_name = str(sys.argv[2])
-class_map_default_folder = "/home/sutan101/data/aqueduct_gis_layers/aqueduct_shp_from_marta/" 
+class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/" 
 if class_map_file_name == "state": class_map_file_name = class_map_default_folder + "/Aqueduct_States.map"
 if class_map_file_name == "drainage_unit": class_map_file_name = class_map_default_folder + "/Aqueduct_GDBD.map"
 if class_map_file_name == "aquifer": class_map_file_name = class_map_default_folder + "/why_wgs1984_BUENO.map"
-if class_map_file_name == "country": class_map_file_name = "/home/sutan101/data/country_shp_from_tianyi/World_Polys_High.map"
+if class_map_file_name == "country": class_map_file_name = "/projects/0/dfguu/users/edwin/data/country_shp_from_tianyi/World_Polys_High.map"
 
 # reading the class map
 class_map    = pcr.nominal(pcr.uniqueid(landmask))
@@ -51,11 +51,11 @@ start_year = int(sys.argv[3])
 end_year   = int(sys.argv[4])
  
 # cell_area (unit: m2)
-cell_area = pcr.readmap("/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map") 
+cell_area = pcr.readmap("/projects/0/dfguu/data/hydroworld/PCRGLOBWB20/input5min/routing/cellsize05min.correct.map") 
 segment_cell_area = pcr.areatotal(cell_area, class_map)
 
 # extent of aquifer/sedimentary basins:
-sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/home/sutan101/data/sed_extent/sed_extent.map")), 0.0)
+sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/projects/0/dfguu/users/edwin/data/sed_extent/sed_extent.map")), 0.0)
 cell_area = sedimentary_basin * cell_area
 #~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
@@ -64,7 +64,10 @@ class_map_all = class_map
 class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
-fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
+#~ # - at speedy/rapid
+#~ fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
+# - at cartesius
+fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
                                        pcr.windowaverage(fraction_reserved_recharge, 0.5))
@@ -91,7 +94,7 @@ fraction_reserved_recharge = pcr.min(0.75, fraction_reserved_recharge)
 groundwater_abstraction = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
-    netcdf_file   = "/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/totalGroundwaterAbstraction_annuaTot_output_1981to2010.nc"
+    netcdf_file   = "/scratch/shared/hydrowld/from_rens_archive/wri_aqueduct_4landcovertypes_1958-2014/totalGroundwaterAbstraction_annuaTot_output.nc"
     variable_name = "total_groundwater_abstraction"
     groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                       useDoy = None,
@@ -106,7 +109,7 @@ areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction 
 groundwater_recharge = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
-    netcdf_file   = "/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/netcdf/gwRecharge_annuaTot_output_1981to2010.nc"
+    netcdf_file   = "/scratch/shared/hydrowld/from_rens_archive/wri_aqueduct_4landcovertypes_1958-2014/gwRecharge_annuaTot_output.nc"
     variable_name = "groundwater_recharge"
     groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                    useDoy = None,
