@@ -71,6 +71,7 @@ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 #~ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/minimum_fraction_reserved_recharge10.5min.map")
 
 fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/q90_aqueduct_runs/fraction_reserved_recharge.map")
+fraction_reserved_recharge = fraction_reserved_recharge * 1.25
 
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
