@@ -22,7 +22,7 @@ except:
 	pass
 
 # set clone
-clone_map = "/data/hydroworld/PCRGLOBWB20/input5min/routing/lddsound_05min.map"
+clone_map = "/projects/0/dfguu/data/hydroworld/PCRGLOBWB20/input5min/routing/lddsound_05min.map"
 pcr.setclone(clone_map)
 
 # landmask map
