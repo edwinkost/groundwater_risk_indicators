@@ -67,10 +67,10 @@ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 #~ # - at speedy/rapid
 #~ fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - at cartesius
-#~ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
+fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
 #~ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fraction_reserved_recharge_calculated_by_rens/reservedrecharge/minimum_fraction_reserved_recharge10.5min.map")
 
-fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/q90_aqueduct_runs/fraction_reserved_recharge.map")
+#~ fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/q90_aqueduct_runs/fraction_reserved_recharge.map")
 #~ fraction_reserved_recharge = pcr.min(1.0, fraction_reserved_recharge * 1.50)
 
 # - extrapolation
