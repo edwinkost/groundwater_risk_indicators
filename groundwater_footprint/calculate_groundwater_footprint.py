@@ -63,7 +63,7 @@ cell_area = sedimentary_basin * cell_area
 class_map_all = class_map
 class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
-# fraction for groundwater recharge to be reserved to meet the environmental flow
+# fraction for groundwater recharge to be reserved to meet the environmental flow (calculated manually)
 #~ # - at speedy/rapid
 #~ fraction_reserved_recharge = pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - at cartesius
