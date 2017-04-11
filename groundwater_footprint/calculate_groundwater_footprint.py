@@ -61,7 +61,7 @@ cell_area = sedimentary_basin * cell_area
 
 # we only use pixels belonging to the sedimentary basin
 class_map_all = class_map
-class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
+#~ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow (calculated manually)
 #~ # - at speedy/rapid
