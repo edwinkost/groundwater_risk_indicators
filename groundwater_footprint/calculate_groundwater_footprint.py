@@ -91,15 +91,15 @@ fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, 0.1)
 # - set minimum value to 0.10
 fraction_reserved_recharge = pcr.max(0.10, fraction_reserved_recharge)
-# - set maximum value to 0.75
-fraction_reserved_recharge = pcr.min(0.75, fraction_reserved_recharge)
+# - set maximum value to 0.90
+fraction_reserved_recharge = pcr.min(0.90, fraction_reserved_recharge)
 
 # areal_groundwater_abstraction (unit: m/year)
 #~ groundwater_abstraction = pcr.cover(pcr.readmap("/nfsarchive/edwin-emergency-backup-DO-NOT-DELETE/rapid/edwin/05min_runs_results/2015_04_27/non_natural_2015_04_27/global/analysis/avg_values_1990_to_2010/totalGroundwaterAbstraction_annuaTot_output_1990to2010.map"), 0.0)
 groundwater_abstraction = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
-    netcdf_file   = "/scratch/shared/hydrowld/from_rens_archive/wri_aqueduct_4landcovertypes_1958-2014/totalGroundwaterAbstraction_annuaTot_output.nc"
+    netcdf_file   = "/scratch-shared/edwinsut/05min_runs_2017_march_april/4LCs_accutraveltime_cru-forcing/non-natural/begin_from_1958/global/netcdf/totalGroundwaterAbstraction_annuaTot_output_1958-01-31_to_2010-12-31.nc"
     variable_name = "total_groundwater_abstraction"
     groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                       useDoy = None,
@@ -114,7 +114,7 @@ areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction 
 groundwater_recharge = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
-    netcdf_file   = "/scratch/shared/hydrowld/from_rens_archive/wri_aqueduct_4landcovertypes_1958-2014/gwRecharge_annuaTot_output.nc"
+    netcdf_file   = "/scratch-shared/edwinsut/05min_runs_2017_march_april/4LCs_accutraveltime_cru-forcing/non-natural/begin_from_1958/global/netcdf/gwRecharge_annuaTot_output_1958-01-31_to_2010-12-31.nc"
     variable_name = "groundwater_recharge"
     groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                    useDoy = None,
@@ -130,7 +130,7 @@ groundwater_contribution_to_environmental_flow          = pcr.max(0.10, fraction
 groundwater_contribution_to_environmental_flow_filename = output_directory + "/" + "groundwater_contribution_to_environmental_flow.m.per.year.map" 
 pcr.report(pcr.ifthen(landmask, groundwater_contribution_to_environmental_flow), groundwater_contribution_to_environmental_flow_filename)
 areal_groundwater_contribution_to_environmental_flow = pcr.areatotal(groundwater_contribution_to_environmental_flow * cell_area, class_map)/pcr.areatotal(cell_area, class_map) 
-areal_groundwater_contribution_to_environmental_flow = pcr.min(1.00 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
+areal_groundwater_contribution_to_environmental_flow = pcr.min(0.90 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
 
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
