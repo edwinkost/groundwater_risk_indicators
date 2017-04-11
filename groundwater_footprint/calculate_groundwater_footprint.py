@@ -72,7 +72,7 @@ fraction_reserved_recharge = pcr.readmap("/projects/0/dfguu/users/edwin/data/fra
 
 #~ fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/q90_aqueduct_runs/fraction_reserved_recharge.map")
 #~ fraction_reserved_recharge = pcr.min(1.0, fraction_reserved_recharge * 1.50)
-fraction_reserved_recharge = pcr.max(0.90, fraction_reserved_recharge)
+fraction_reserved_recharge = pcr.max(0.50, fraction_reserved_recharge)
 
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
