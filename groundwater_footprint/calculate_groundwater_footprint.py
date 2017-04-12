@@ -101,6 +101,7 @@ groundwater_abstraction = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
     netcdf_file   = "/scratch-shared/edwinsut/05min_runs_2017_march_april/4LCs_accutraveltime_cru-forcing/non-natural/begin_from_1958/global/netcdf/totalGroundwaterAbstraction_annuaTot_output_1958-12-31_to_2010-12-31.nc"
+    netcdf_file   = "/scratch-shared/edwinsut/test_stress/abstraction.nc"
     variable_name = "total_groundwater_abstraction"
     groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                       useDoy = None,
@@ -116,6 +117,7 @@ groundwater_recharge = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     date_input_in_string = str(year) + "-12-31"
     netcdf_file   = "/scratch-shared/edwinsut/05min_runs_2017_march_april/4LCs_accutraveltime_cru-forcing/non-natural/begin_from_1958/global/netcdf/gwRecharge_annuaTot_output_1958-12-31_to_2010-12-31.nc"
+    netcdf_file   = "/scratch-shared/edwinsut/test_stress/recharge.nc"
     variable_name = "groundwater_recharge"
     groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                    useDoy = None,
