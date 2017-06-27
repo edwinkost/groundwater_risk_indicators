@@ -92,7 +92,7 @@ fraction_reserved_recharge = pcr.min(0.75, fraction_reserved_recharge)
 groundwater_abstraction = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     for month in range(1, 12 + 1, 1):
-        date_in_string  = str(calendar.monthrange(year, month))
+        date_in_string  = str(calendar.monthrange(year, month)[1])
         month_in_string = str(month)
         if month < 10: month_in_string = "0" + month_in_string 
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
@@ -111,7 +111,7 @@ areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction 
 groundwater_recharge = pcr.scalar(0.0)
 for year in range(start_year, end_year + 1, 1):
     for month in range(1, 12 + 1, 1):
-        date_in_string  = str(calendar.monthrange(year, month))
+        date_in_string  = str(calendar.monthrange(year, month)[1])
         month_in_string = str(month)
         if month < 10: month_in_string = "0" + month_in_string 
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
