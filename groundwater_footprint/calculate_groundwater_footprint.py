@@ -96,7 +96,7 @@ for year in range(start_year, end_year + 1, 1):
         month_in_string = str(month)
         if month < 10: month_in_string = "0" + month_in_string 
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
-        netcdf_file   = "/scratch-shared/edwinwri/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/totalGroundwaterAbstraction_monthAvg_output_1959-01-31_to_2015-12-31.nc"
+        netcdf_file   = "/projects/0/aqueduct/users/edwinsut/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/totalGroundwaterAbstraction_monthTot_output_1959-01-31_to_2015-12-31.nc"
         variable_name = "total_groundwater_abstraction"
         groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                           useDoy = None,
@@ -115,7 +115,7 @@ for year in range(start_year, end_year + 1, 1):
         month_in_string = str(month)
         if month < 10: month_in_string = "0" + month_in_string 
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
-        netcdf_file   = "/scratch-shared/edwinwri/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/totalGroundwaterAbstraction_monthAvg_output_1959-01-31_to_2015-12-31.nc"
+        netcdf_file   = "/projects/0/aqueduct/users/edwinsut/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/gwRecharge_monthTot_output_1958-01-31_to_2015-12-31.nc"
         variable_name = "groundwater_recharge"
         groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                        useDoy = None,
