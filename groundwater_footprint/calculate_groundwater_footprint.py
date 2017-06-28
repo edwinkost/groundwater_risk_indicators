@@ -131,7 +131,7 @@ groundwater_contribution_to_environmental_flow          = pcr.max(0.10, fraction
 groundwater_contribution_to_environmental_flow_filename = output_directory + "/" + "groundwater_contribution_to_environmental_flow.m.per.year.map" 
 pcr.report(pcr.ifthen(landmask, groundwater_contribution_to_environmental_flow), groundwater_contribution_to_environmental_flow_filename)
 areal_groundwater_contribution_to_environmental_flow = pcr.areatotal(groundwater_contribution_to_environmental_flow * cell_area, class_map)/pcr.areatotal(cell_area, class_map) 
-areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
+#~ areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
 
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
