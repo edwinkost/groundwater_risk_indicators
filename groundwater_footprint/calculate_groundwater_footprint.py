@@ -147,10 +147,10 @@ groundwater_stress_map = pcr.ifthen(landmask, \
                          pcr.areamaximum(groundwater_stress_map, class_map_all))
 groundwater_stress_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_stress.map"
 pcr.report(groundwater_stress_map, groundwater_stress_map_filename)
-#~ pcr.aguila(groundwater_stress_map)
+pcr.aguila(groundwater_stress_map)
 
 # groundwater footprint map (km2)
 groundwater_footprint_map = groundwater_stress_map * pcr.cover(pcr.areatotal(cell_area, class_map), 0.0) / (1000. * 1000.)
 groundwater_footprint_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_footprint.km2.map"
 pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
-#~ pcr.aguila(groundwater_footprint_map)
+pcr.aguila(groundwater_footprint_map)
