@@ -60,8 +60,8 @@ segment_cell_area = pcr.areatotal(cell_area, class_map)
 #~ cell_area = sedimentary_basin * cell_area
 #~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
+class_map_all = class_map
 #~ # we only use pixels belonging to the sedimentary basin
-#~ class_map_all = class_map
 #~ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
