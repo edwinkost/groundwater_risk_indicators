@@ -58,14 +58,14 @@ segment_cell_area = pcr.areatotal(cell_area, class_map)
 # extent of aquifer/sedimentary basins:
 sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/projects/0/dfguu/users/edwin/data/sed_extent/sed_extent.map")), 0.0)
 cell_area = sedimentary_basin * cell_area
-cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
+#~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
 # we only use pixels belonging to the sedimentary basin
 class_map_all = class_map
 class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
-fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/fraction_reserved_recharge_rens/reservedrecharge/minimum_fraction_reserved_recharge10.5min.map")
+fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/fraction_reserved_recharge_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
                                        pcr.windowaverage(fraction_reserved_recharge, 0.5))
@@ -104,6 +104,8 @@ for year in range(start_year, end_year + 1, 1):
                                                           cloneMapFileName  = None,\
                                                           LatitudeLongitude = True,\
                                                           specificFillValue = None), 0.0)
+# convert to m/year
+groundwater_abstraction = groundwater_abstraction / (end_year - start_year + 1)
 areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction * cell_area, class_map)/pcr.areatotal(cell_area, class_map), 0.0)
 
 # areal groundwater recharge (unit: m/year)
@@ -124,6 +126,8 @@ for year in range(start_year, end_year + 1, 1):
                                                        cloneMapFileName  = None,\
                                                        LatitudeLongitude = True,\
                                                        specificFillValue = None), 0.0)
+# convert to m/year
+groundwater_recharge = groundwater_recharge / (end_year - start_year + 1)
 areal_groundwater_recharge = pcr.areatotal(groundwater_recharge * cell_area, class_map)/pcr.areatotal(cell_area, class_map)
 # - ignore negative groundwater recharge (due to capillary rise)
 areal_groundwater_recharge = pcr.max(0.0, areal_groundwater_recharge)
