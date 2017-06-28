@@ -57,7 +57,7 @@ segment_cell_area = pcr.areatotal(cell_area, class_map)
 
 # extent of aquifer/sedimentary basins:
 sedimentary_basin = pcr.cover(pcr.scalar(pcr.readmap("/projects/0/dfguu/users/edwin/data/sed_extent/sed_extent.map")), 0.0)
-cell_area = sedimentary_basin * cell_area
+#~ cell_area = sedimentary_basin * cell_area
 #~ cell_area = pcr.ifthenelse(pcr.areatotal(cell_area, class_map) > 0.25 * segment_cell_area, cell_area, 0.0)
 
 # we only use pixels belonging to the sedimentary basin
