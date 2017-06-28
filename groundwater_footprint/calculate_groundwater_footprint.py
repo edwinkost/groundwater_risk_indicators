@@ -133,8 +133,8 @@ areal_groundwater_recharge = pcr.areatotal(groundwater_recharge * cell_area, cla
 areal_groundwater_recharge = pcr.max(0.0, areal_groundwater_recharge)
 
 # areal groundwater contribution to meet enviromental flow (unit: m/year)
-groundwater_contribution_to_environmental_flow          = pcr.max(0.10, fraction_reserved_recharge * groundwater_recharge)
-#~ groundwater_contribution_to_environmental_flow       = fraction_reserved_recharge * groundwater_recharge
+#~ groundwater_contribution_to_environmental_flow       = pcr.max(0.10, fraction_reserved_recharge * groundwater_recharge)  # THIS IS WRONG.
+groundwater_contribution_to_environmental_flow          = fraction_reserved_recharge * groundwater_recharge
 groundwater_contribution_to_environmental_flow_filename = output_directory + "/" + "groundwater_contribution_to_environmental_flow.m.per.year.map" 
 pcr.report(pcr.ifthen(landmask, groundwater_contribution_to_environmental_flow), groundwater_contribution_to_environmental_flow_filename)
 areal_groundwater_contribution_to_environmental_flow = pcr.areatotal(groundwater_contribution_to_environmental_flow * cell_area, class_map)/pcr.areatotal(cell_area, class_map) 
