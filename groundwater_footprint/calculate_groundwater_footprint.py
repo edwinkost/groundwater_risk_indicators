@@ -98,11 +98,12 @@ for year in range(start_year, end_year + 1, 1):
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
         netcdf_file   = "/projects/0/aqueduct/users/edwinsut/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/totalGroundwaterAbstraction_monthTot_output_1959-01-31_to_2015-12-31.nc"
         variable_name = "total_groundwater_abstraction"
-        groundwater_abstraction += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
+        groundwater_abstraction += pcr.cover(
+                                   vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                           useDoy = None,
                                                           cloneMapFileName  = None,\
                                                           LatitudeLongitude = True,\
-                                                          specificFillValue = None)
+                                                          specificFillValue = None), 0.0)
 areal_groundwater_abstraction = pcr.cover(pcr.areatotal(groundwater_abstraction * cell_area, class_map)/pcr.areatotal(cell_area, class_map), 0.0)
 
 # areal groundwater recharge (unit: m/year)
@@ -117,11 +118,12 @@ for year in range(start_year, end_year + 1, 1):
         date_input_in_string = str(year) + "-" + month_in_string + "-" + date_in_string
         netcdf_file   = "/projects/0/aqueduct/users/edwinsut/05min_runs_rerun_for_WRI_version_27_april_2015_with_more_daily_ouputs/merged_1959_to_2015/global/netcdf/gwRecharge_monthTot_output_1958-01-31_to_2015-12-31.nc"
         variable_name = "groundwater_recharge"
-        groundwater_recharge += vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
+        groundwater_recharge += pcr.cover(
+                                vos.netcdf2PCRobjClone(ncFile = netcdf_file, varName = variable_name, dateInput = date_input_in_string,\
                                                        useDoy = None,
                                                        cloneMapFileName  = None,\
                                                        LatitudeLongitude = True,\
-                                                       specificFillValue = None)
+                                                       specificFillValue = None), 0.0)
 areal_groundwater_recharge = pcr.areatotal(groundwater_recharge * cell_area, class_map)/pcr.areatotal(cell_area, class_map)
 # - ignore negative groundwater recharge (due to capillary rise)
 areal_groundwater_recharge = pcr.max(0.0, areal_groundwater_recharge)
@@ -131,7 +133,7 @@ groundwater_contribution_to_environmental_flow          = pcr.max(0.10, fraction
 groundwater_contribution_to_environmental_flow_filename = output_directory + "/" + "groundwater_contribution_to_environmental_flow.m.per.year.map" 
 pcr.report(pcr.ifthen(landmask, groundwater_contribution_to_environmental_flow), groundwater_contribution_to_environmental_flow_filename)
 areal_groundwater_contribution_to_environmental_flow = pcr.areatotal(groundwater_contribution_to_environmental_flow * cell_area, class_map)/pcr.areatotal(cell_area, class_map) 
-areal_groundwater_contribution_to_environmental_flow = pcr.min(0.90 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
+areal_groundwater_contribution_to_environmental_flow = pcr.min(0.75 * areal_groundwater_recharge, areal_groundwater_contribution_to_environmental_flow)
 
 # groundwater stress map (dimensionless)
 groundwater_stress_map = pcr.ifthen(landmask, \
