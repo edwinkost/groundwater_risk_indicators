@@ -215,7 +215,7 @@ var_name = 'groundwater_stress'
 netcdf_file[var_name] = {}
 #
 # - resolution (unit: arc-minutes)
-netcdf_file[var_name]['resolution_arcmin'] = 0.5 
+netcdf_file[var_name]['resolution_arcmin'] = 5.0 
 #
 # - general attribute information:
 netcdf_file[var_name]['description'] = netcdf_setup['description']
