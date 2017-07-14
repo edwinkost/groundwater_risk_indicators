@@ -237,6 +237,15 @@ print(msg)
 netcdf_file[var_name]['file_name'] = output_netcdf_file_name
 netcdf_report.create_netcdf_file(netcdf_file[var_name]) 
 #
+# - creating variable for the class/spatial units
+netcdf_report.create_variable(\
+                              ncFileName = output_netcdf_file_name, \
+                              varName    = "spatial_unit", \
+                              varUnit    = "-", \
+                              longName   = str(sys.argv[2]) + "_spatial_unit", \
+                              comment    = "The spatial unit is based on " + text_unit + "."
+                              )
+#
 # - variable name, unit, comment, etc. 
 variable_name = var_name
 var_long_name = variable_name
@@ -251,15 +260,7 @@ netcdf_report.create_variable(\
                               longName   = var_long_name, \
                               comment    = var_comment
                               )
-# - creating variable for the class/spatial units
-netcdf_report.create_variable(\
-                              ncFileName = output_netcdf_file_name, \
-                              varName    = "spatial_unit", \
-                              varUnit    = "-", \
-                              longName   = class_map_file_name + "_spatial_unit", \
-                              comment    = "The spatial unit is based on " + text_unit + "."
-                              )
 
 # - write to netcdf files
-netcdf_report.data_to_netcdf(output_netcdf_file_name, "groundwater_stress", pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
 netcdf_report.data_to_netcdf(output_netcdf_file_name, "spatial_unit", pcr.pcr2numpy(pcr.scalar(class_map) , vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+netcdf_report.data_to_netcdf(output_netcdf_file_name, "groundwater_stress", pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
