@@ -5,6 +5,7 @@ import os
 import sys
 import pcraster as pcr
 import calendar
+import datetime
 
 import virtualOS as vos
 
@@ -165,14 +166,16 @@ pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 
 # text/string for the unit
 text_unit = class_map_file_name
-if class_map_file_name == "drainage_unit": text_unit = drainage
+if class_map_file_name == "state": text_unit = "GADM states"
+if class_map_file_name == "drainage_unit": text_unit = "HydroBasin Level 6"
+if class_map_file_name == "aquifer": text_unit = "WHYMAP aquifers"
 
 # netcdf general setup:
 netcdf_setup = {}
 netcdf_setup['format']          = "NETCDF4"
 netcdf_setup['zlib']            = False
 netcdf_setup['institution']     = "Department of Physical Geography, Utrecht University ; Deltares ; World Resources Institute"
-netcdf_setup['title'      ]     = "Global groundwater stress at the spatial unit of " + text_unit 
+netcdf_setup['title'      ]     = "PCR-GLOBWB output: Global groundwater stress at the spatial unit of " + text_unit 
 netcdf_setup['created by' ]     = "Edwin H. Sutanudjaja (E.H.Sutanudjaja@uu.nl) ; Sandra Galvis Rodriguez (Sandra.GalvisRodriguez@deltares.nl) ; Marta Faneca Sànchez [Marta.FanecaSanchez@deltares.nl]"
 netcdf_setup['description']     = "The global groundwater stress map at the spatial unit/level of " + text_unit + ", calculated based on the 5 arc-minute simulation result of PCR-GLOBWB forced with the forcing data of CRU downscaled with ERA-40 and ERA-Interim"
 netcdf_setup['source'     ]     = "Utrecht University, Department of Physical Geography - contact: Edwin H. Sutanudjaja (E.H.Sutanudjaja@uu.nl)"
