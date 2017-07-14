@@ -166,6 +166,7 @@ pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 
 # text/string for the unit
 text_unit = str(sys.argv[2])
+if text_unit == "pixel": text_unit = "5 arc-minute resolution"
 if text_unit == "state": text_unit = "GADM states"
 if text_unit == "drainage_unit": text_unit = "HydroBasin Level 6"
 if text_unit == "aquifer": text_unit = "WHYMAP aquifers"
@@ -236,7 +237,7 @@ netcdf_report.create_netcdf_file(netcdf_file[var_name])
 # - variable name, unit, comment, etc. 
 variable_name = var_name
 var_long_name = variable_name
-variable_unit = "-"
+variable_unit = "- (dimensionless)"
 var_comment   = "The definition of groundwater stress is based on Gleeson, et al., 2012."
 # 
 # - creating variable 
