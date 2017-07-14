@@ -165,10 +165,10 @@ pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 # Convert the groundwater stress map pcraster file to a netcdf file:
 
 # text/string for the unit
-text_unit = class_map_file_name
-if class_map_file_name == "state": text_unit = "GADM states"
-if class_map_file_name == "drainage_unit": text_unit = "HydroBasin Level 6"
-if class_map_file_name == "aquifer": text_unit = "WHYMAP aquifers"
+text_unit = str(sys.argv[2])
+if text_unit == "state": text_unit = "GADM states"
+if text_unit == "drainage_unit": text_unit = "HydroBasin Level 6"
+if text_unit == "aquifer": text_unit = "WHYMAP aquifers"
 
 # netcdf general setup:
 netcdf_setup = {}
