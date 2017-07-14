@@ -89,7 +89,7 @@ fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, 0.1)
 # - set minimum value to 0.30
 fraction_reserved_recharge = pcr.max(0.30, fraction_reserved_recharge)
-# - set maximum value to 0.30
+# - set maximum value to 0.70
 fraction_reserved_recharge = pcr.min(0.70, fraction_reserved_recharge)
 
 # areal_groundwater_abstraction (unit: m/year)
