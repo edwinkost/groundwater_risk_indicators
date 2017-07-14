@@ -230,7 +230,7 @@ netcdf_file[var_name]['references' ] = netcdf_setup['references' ]
 output_netcdf_file_name = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_stress.nc"
 msg = "Preparing the netcdf file: " + output_netcdf_file_name
 print(msg)
-netcdf_file[var_name]['file_name'] = file_name
+netcdf_file[var_name]['file_name'] = output_netcdf_file_name
 netcdf_report.create_netcdf_file(netcdf_file[var_name]) 
 #
 # - variable name, unit, comment, etc. 
