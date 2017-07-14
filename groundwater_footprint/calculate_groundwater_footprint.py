@@ -8,6 +8,9 @@ import calendar
 
 import virtualOS as vos
 
+# reporting module
+import output_netcdf_cf_convention as outputNetCDF
+
 # output directory
 output_directory = os.path.dirname(str(sys.argv[1]))
 try:
@@ -150,3 +153,127 @@ groundwater_footprint_map = groundwater_stress_map * pcr.cover(pcr.areatotal(cel
 groundwater_footprint_map_filename = output_directory + "/" + str(sys.argv[2]) + "_" + str(start_year) + "to" + str(end_year) + ".groundwater_footprint.km2.map"
 pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 #~ pcr.aguila(groundwater_footprint_map)
+
+
+# Convert the groundwater stress map pcraster file to a netcdf file:
+
+# text/string for the unit
+text_unit = class_map_file_name
+if class_map_file_name == "drainage_unit": text_unit = drainage
+
+# netcdf general setup:
+netcdf_setup = {}
+netcdf_setup['format']          = "NETCDF4"
+netcdf_setup['zlib']            = False
+netcdf_setup['institution']     = "Department of Physical Geography, Utrecht University ; Deltares ; World Resources Institute"
+netcdf_setup['title'      ]     = "Global groundwater stress at the spatial unit of " + 
+netcdf_setup['created by' ]     = "Edwin H. Sutanudjaja (E.H.Sutanudjaja@uu.nl) ; Sandra Galvis Rodriguez (Sandra.GalvisRodriguez@deltares.nl) ; Marta Faneca Sànchez [Marta.FanecaSanchez@deltares.nl]"
+netcdf_setup['description']     = "The global groundwater stress map at the spatial unit/level of " + text_unit + ", calculated based on the 5 arc-minute simulation result of PCR-GLOBWB forced with the forcing data of CRU downscaled with ERA-40 and ERA-Interim"
+netcdf_setup['source'     ]     = "Utrecht University, Department of Physical Geography - contact: Edwin H. Sutanudjaja (E.H.Sutanudjaja@uu.nl)"
+netcdf_setup['references' ]     = ""
+netcdf_setup['references' ]    += "Sutanudjaja, E.H., van Beek, R., Wada, Y., Bosmans, J., Drost, N., de Graaf, I., de Jong, K., Lopez Lopez, P., Pessenteiner, S., Oliver, S., Straatsma, M., Wanders, N., Wisser, D., and Bierkens, M.F.P.: PCR-GLOBWB 2.0: a 5 arc-minute global hydrological and water resources model, to be submitted to Geosci. Model Dev. Discuss., in preparation, 2017. "
+netcdf_setup['references' ]    += "Sutanudjaja, E.H., van Beek, R., Wada, Y., Bosmans, J., Drost, N., de Graaf, I., de Jong, K., Lopez Lopez, P., Pessenteiner, S., Oliver, S., Straatsma, M., Wanders, N., Wisser, D., and Bierkens, M.F.P.: PCR-GLOBWB_model, available at: https://github.com/UU-Hydro/PCR-GLOBWB_model, 2017. "
+netcdf_setup['references' ]    += "de Graaf, I.E.M., van Beek, R., Gleeson, T., Moosdorf, N., Schmitz, O., Sutanudjaja, E.H., Bierkens, M.F.P.: A global-scale two-layer transient groundwater model: Development and application to groundwater depletion, Adv. Water Resour., 102, 53–67, doi:10.1016/j.advwatres.2017.01.011, 2017. "
+netcdf_setup['references' ]    += "Faneca Sanchez, M., Sutanudjaja, E.H., Kuijper M., and Bierkens, M.F.P.: Global Groundwater related Risk Indicators: quantifying groundwater stress and groundwater table decline (1990-2010) at global scale, EGU General Assembly, 2016. "
+netcdf_setup['references' ]    += "Erkens, G. and Sutanudjaja, E. H.: Towards a global land subsidence map, Proc. IAHS, 372, 83-87, https://doi.org/10.5194/piahs-372-83-2015, 2015. "
+netcdf_setup['references' ]    += "de Graaf, I. E. M., Sutanudjaja, E. H., van Beek, L. P. H., and Bierkens, M. F. P.: A high-resolution global-scale groundwater model, Hydrol. Earth Syst. Sci., 19, 823-837, https://doi.org/10.5194/hess-19-823-2015, 2015. "
+netcdf_setup['references' ]    += "van Beek, R., Wada, Y., and Bierkens, M. F. P.: Global monthly water stress: 1. Water balance and water availability, Water Resour. Res., 47, W07517, doi:10.1029/2010WR009791, 2011."
+
+# object for reporting/making netcdf files
+netcdf_report = outputNetCDF.OutputNetCDF()
+
+msg = "Preparing netcdf output files (following the aqueduct convention)."
+print(msg)
+#
+# - time bounds for netcdf files
+lowerTimeBound = datetime.datetime(start_year,  1,  1, 0)
+upperTimeBound = datetime.datetime(end_year, 12, 31, 0)
+timeBounds = [lowerTimeBound, upperTimeBound]
+#
+# - the dictionary for attribute information for netcdf files
+netcdf_file = {}
+# - variable name
+var_name = 'groundwater_stress' 
+netcdf_file[var_name] = {}
+#
+# - resolution (unit: arc-minutes)
+netcdf_file[var_name]['resolution_arcmin'] = 0.5 
+#
+# - general attribute information:
+netcdf_file[var_name]['description'] = netcdf_setup['description']
+netcdf_file[var_name]['institution'] = netcdf_setup['institution']
+netcdf_file[var_name]['title'      ] = netcdf_setup['title'      ]
+netcdf_file[var_name]['created by' ] = netcdf_setup['created by' ]
+netcdf_file[var_name]['source'     ] = netcdf_setup['source'     ]
+netcdf_file[var_name]['references' ] = netcdf_setup['references' ]
+
+# - return periods
+return_periods      = [ "2-year",  "5-year", "10-year", "25-year", "50-year", "100-year", "250-year", "500-year", "1000-year"]
+return_period_codes = ["rp00002", "rp00005", "rp00010", "rp00025", "rp00050",  "rp00100",  "rp00250",  "rp00500",   "rp01000"]
+
+# preparing netcdf files and their variables:
+for i_return_period in range(0, len(return_periods)):
+    # 
+    return_period      = return_periods[i_return_period]
+    return_period_code = return_period_codes[i_return_period]
+    # 
+    # - preparing netcdf file:
+    file_name = netcdf_output_folder + "/" + output_netcdf_file_name + "_" + return_period_code + ".nc"
+    msg = "Preparing the netcdf file: " + file_name
+    logger.info(msg)
+    netcdf_file[var_name]['file_name'] = file_name
+    netcdf_report.create_netcdf_file(netcdf_file[var_name]) 
+    #
+    # - variable name and unit 
+    variable_name = str(return_period) + "_of_" + varDict.netcdf_short_name[var_name]
+    var_long_name = str(return_period) + "_of_" + varDict.netcdf_long_name[var_name]
+    variable_unit = varDict.netcdf_unit[var_name]
+    # 
+    # - creating variable 
+    netcdf_report.create_variable(\
+                                  ncFileName = file_name, \
+                                  varName    = variable_name, \
+                                  varUnit    = variable_unit, \
+                                  longName   = var_long_name, \
+                                  comment    = varDict.comment[var_name]
+                                  )
+
+# masking out water bodies and store output pcraster maps that have been merged to netcdf files:
+for i_return_period in range(0, len(return_periods)):
+    
+    # return period:
+    return_period      = return_periods[i_return_period]
+    return_period_code = return_period_codes[i_return_period]
+
+    # netcdf file name:
+    file_name = netcdf_output_folder + "/" + output_netcdf_file_name + "_" + return_period_code + ".nc"
+    msg = "Writing extreme values to a netcdf file: " + str(file_name)
+    logger.info(msg)
+
+    # variable name
+    variable_name = str(return_period) + "_of_" + varDict.netcdf_short_name[var_name]
+
+    msg = "Writing " + str(variable_name)
+    logger.info(msg)
+    
+    # read from pcraster files
+    inundation_file_name = output_directory + "/global/maps/" + "inun_" + str(return_period) + "_of_flood_inundation_volume_catch_" + strahler_order_option + ".tif.map"
+    if map_type_name == "channel_storage.map": inundation_file_name = output_directory + "/global/maps/" + "inun_" + str(return_period) + "_of_channel_storage_catch_" + strahler_order_option + ".tif.map"
+    if return_period == "2-year":
+        inundation_map = pcr.ifthen(landmask_used, pcr.scalar(0.0))
+        pcr.report(inundation_map, inundation_file_name)
+    if return_period != "2-year":
+        inundation_map = pcr.readmap(inundation_file_name)
+        inundation_map = pcr.cover(inundation_map, 0.0)
+        inundation_map = pcr.ifthen(landmask_used, inundation_map)
+    
+    # masking out permanent water bodies
+    inundation_map = pcr.ifthen(non_permanent_water_bodies, inundation_map)
+    
+    # report in pcraster maps
+    pcr.report(inundation_map, inundation_file_name + ".masked_out.map")
+    
+    # write to netcdf files
+    netcdf_report.data_to_netcdf(file_name, variable_name, pcr.pcr2numpy(inundation_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+
+
