@@ -261,5 +261,5 @@ netcdf_report.create_variable(\
                               )
 
 # - write to netcdf files
-netcdf_report.data_to_netcdf(output_netcdf_file_name, variable_name, pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
-netcdf_report.data_to_netcdf(output_netcdf_file_name, variable_name, pcr.pcr2numpy(pcr.scalar(class_map) , vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+netcdf_report.data_to_netcdf(output_netcdf_file_name, "groundwater_stress", pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+netcdf_report.data_to_netcdf(output_netcdf_file_name, "spatial_unit", pcr.pcr2numpy(pcr.scalar(class_map) , vos.MV), timeBounds, timeStamp = None, posCnt = 0)
