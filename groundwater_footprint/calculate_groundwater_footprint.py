@@ -38,10 +38,11 @@ landmask = pcr.defined(pcr.readmap(clone_map))
 #~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/processing_whymap/version_19september2014/major_aquifer_30min.extended.map"
 #~ class_map_file_name = "/projects/0/dfguu/users/edwin/data/processing_whymap/version_19september2014/major_aquifer_30min.map"
 class_map_file_name = str(sys.argv[2])
-class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/" 
+#~ class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/" 
+class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_raster_units_version_july_2017/spatial_units/"
 if class_map_file_name == "state": class_map_file_name = class_map_default_folder + "/Aqueduct_States.map"
-if class_map_file_name == "drainage_unit": class_map_file_name = class_map_default_folder + "/Aqueduct_GDBD.map"
-if class_map_file_name == "aquifer": class_map_file_name = class_map_default_folder + "/why_wgs1984_BUENO.map"
+if class_map_file_name == "drainage_unit": class_map_file_name = class_map_default_folder + "/hybas_merged_custom_level6_V01.map"             # Aqueduct_GDBD.map
+if class_map_file_name == "aquifer": class_map_file_name = class_map_default_folder + "/whymap_wgs1984_BUENO.map"                             # why_wgs1984_BUENO.map
 if class_map_file_name == "country": class_map_file_name = "/projects/0/dfguu/users/edwin/data/country_shp_from_tianyi/World_Polys_High.map"
 
 # reading the class map
@@ -182,12 +183,15 @@ netcdf_setup['references' ]    += "de Graaf, I.E.M., van Beek, R., Gleeson, T., 
 netcdf_setup['references' ]    += "Faneca Sanchez, M., Sutanudjaja, E.H., Kuijper M., and Bierkens, M.F.P.: Global Groundwater related Risk Indicators: quantifying groundwater stress and groundwater table decline (1990-2010) at global scale, EGU General Assembly, 2016. "
 netcdf_setup['references' ]    += "Erkens, G. and Sutanudjaja, E. H.: Towards a global land subsidence map, Proc. IAHS, 372, 83-87, https://doi.org/10.5194/piahs-372-83-2015, 2015. "
 netcdf_setup['references' ]    += "de Graaf, I. E. M., Sutanudjaja, E. H., van Beek, L. P. H., and Bierkens, M. F. P.: A high-resolution global-scale groundwater model, Hydrol. Earth Syst. Sci., 19, 823-837, https://doi.org/10.5194/hess-19-823-2015, 2015. "
-netcdf_setup['references' ]    += "van Beek, R., Wada, Y., and Bierkens, M. F. P.: Global monthly water stress: 1. Water balance and water availability, Water Resour. Res., 47, W07517, doi:10.1029/2010WR009791, 2011."
+netcdf_setup['references' ]    += "Gleeson, T., Wada, Y., and Bierkens, M. F. P., and van Beek, L. P. H.: Water balance of global aquifers revealed by groundwater footprint, Nature, 488(7410), 197–200, 2012. "
+netcdf_setup['references' ]    += "van Beek, R., Wada, Y., and Bierkens, M. F. P.: Global monthly water stress: 1. Water balance and water availability, Water Resour. Res., 47, W07517, doi:10.1029/2010WR009791, 2011. "
 
-
-#~ Aquifers as defined in the groundwater aquifer polygons provided by BGR-WHYMAP (http://www.whymap.org/whymap/EN/Home/whymap_node.html) (Figure 2.2) 
-#~ States as defined as “ID_1” in the Global Administrative Areas database (GADM, http://www.gadm.org) (Figure 2.3)
-#~ Drainage Units as defined in the Global Drainage Basin Database (GDBD, Masutomi et al., 2009. (Figure 2.4)
+# references for the spatial unit:
+spatial_unit_reference = ""
+if class_map_file_name == "aquifer": spatial_unit_reference = "BGR/UNESCO: Groundwater Resources of the World 1: 25 000 000, http://www.whymap.org/whymap/EN/Products/products_node_en.html, 2008."
+if class_map_file_name == "state": spatial_unit_reference = "Global Administrative Areas: GADM database of Global Administrative Areas, http://www.gadm.org/home, 2015. "
+if class_map_file_name == "drainage_unit": "Lehner, B., Grill, G.: Global river hydrography and network routing: baseline data and new approaches to study the world’s large river systems. Hydrological Processes, 27(15): 2171–2186, data is available at http://hydrosheds.org, 2013. "
+netcdf_setup['references' ]    += spatial_unit_reference 
 
 
 # object for reporting/making netcdf files
@@ -226,16 +230,20 @@ logger.info(msg)
 netcdf_file[var_name]['file_name'] = file_name
 netcdf_report.create_netcdf_file(netcdf_file[var_name]) 
 #
-# - variable name and unit 
-variable_name = str(return_period) + "_of_" + varDict.netcdf_short_name[var_name]
-var_long_name = str(return_period) + "_of_" + varDict.netcdf_long_name[var_name]
-variable_unit = varDict.netcdf_unit[var_name]
+# - variable name, unit, comment, etc. 
+variable_name = var_name
+var_long_name = variable_name
+variable_unit = "-"
+var_comment   = "The definition of groundwater stress is based on the definition of Gleeson, et al., 2012."
 # 
 # - creating variable 
 netcdf_report.create_variable(\
-                              ncFileName = file_name, \
+                              ncFileName = output_netcdf_file_name, \
                               varName    = variable_name, \
                               varUnit    = variable_unit, \
                               longName   = var_long_name, \
-                              comment    = varDict.comment[var_name]
+                              comment    = var_comment
                               )
+# - write to netcdf files
+netcdf_report.data_to_netcdf(output_netcdf_file_name, variable_name, pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+
