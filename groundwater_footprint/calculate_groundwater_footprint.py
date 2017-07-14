@@ -69,7 +69,7 @@ class_map_all = class_map
 #~ class_map     = pcr.ifthen(sedimentary_basin > 0, class_map)
 
 # fraction for groundwater recharge to be reserved to meet the environmental flow
-fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinsut/fraction_reserved_recharge_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
+fraction_reserved_recharge = pcr.readmap("/scratch-shared/edwinhs/fraction_reserved_recharge_rens/reservedrecharge/fraction_reserved_recharge10.5min.map")
 # - extrapolation
 fraction_reserved_recharge = pcr.cover(fraction_reserved_recharge, \
                                        pcr.windowaverage(fraction_reserved_recharge, 0.5))
