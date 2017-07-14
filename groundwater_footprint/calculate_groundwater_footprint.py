@@ -42,7 +42,7 @@ class_map_file_name = str(sys.argv[2])
 #~ class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_shp_from_marta/" 
 class_map_default_folder = "/projects/0/dfguu/users/edwin/data/aqueduct_gis_layers/aqueduct_raster_units_version_july_2017/spatial_units/"
 if class_map_file_name == "state": class_map_file_name = class_map_default_folder + "/Aqueduct_States.map"
-if class_map_file_name == "drainage_unit": class_map_file_name = class_map_default_folder + "/hybas_merged_custom_level6_V01.map"             # Aqueduct_GDBD.map
+if class_map_file_name == "drainage": class_map_file_name = class_map_default_folder + "/hybas_merged_custom_level6_V01.map"             # Aqueduct_GDBD.map
 if class_map_file_name == "aquifer": class_map_file_name = class_map_default_folder + "/whymap_wgs1984_BUENO.map"                             # why_wgs1984_BUENO.map
 if class_map_file_name == "country": class_map_file_name = "/projects/0/dfguu/users/edwin/data/country_shp_from_tianyi/World_Polys_High.map"
 
@@ -51,6 +51,9 @@ class_map    = pcr.nominal(pcr.uniqueid(landmask))
 if class_map_file_name != "pixel":
 	class_map = vos.readPCRmapClone(class_map_file_name, clone_map, tmp_directory, None, False, None, True, False)
 	class_map = pcr.ifthen(pcr.scalar(class_map) > 0.0, pcr.nominal(class_map)) 
+
+# limit the class to the landmask only:
+class_map     = pcr.ifthen(landmask, class_map)
 
 # time selection
 start_year = int(sys.argv[3])
@@ -168,7 +171,7 @@ pcr.report(groundwater_footprint_map, groundwater_footprint_map_filename)
 text_unit = str(sys.argv[2])
 if text_unit == "pixel": text_unit = "5 arc-minute resolution"
 if text_unit == "state": text_unit = "GADM states"
-if text_unit == "drainage_unit": text_unit = "HydroBasin Level 6"
+if text_unit == "drainage": text_unit = "HydroBasin Level 6"
 if text_unit == "aquifer": text_unit = "WHYMAP aquifers"
 
 # netcdf general setup:
@@ -194,7 +197,7 @@ netcdf_setup['references' ]    += "van Beek, R., Wada, Y., and Bierkens, M. F. P
 spatial_unit_reference = ""
 if class_map_file_name == "aquifer": spatial_unit_reference = "BGR/UNESCO: Groundwater Resources of the World 1: 25 000 000, http://www.whymap.org/whymap/EN/Products/products_node_en.html, 2008."
 if class_map_file_name == "state": spatial_unit_reference = "Global Administrative Areas: GADM database of Global Administrative Areas, http://www.gadm.org/home, 2015. "
-if class_map_file_name == "drainage_unit": "Lehner, B., Grill, G.: Global river hydrography and network routing: baseline data and new approaches to study the world’s large river systems. Hydrological Processes, 27(15): 2171–2186, data is available at http://hydrosheds.org, 2013. "
+if class_map_file_name == "drainage": "Lehner, B., Grill, G.: Global river hydrography and network routing: baseline data and new approaches to study the world’s large river systems. Hydrological Processes, 27(15): 2171–2186, data is available at http://hydrosheds.org, 2013. "
 netcdf_setup['references' ]    += spatial_unit_reference 
 
 
@@ -248,6 +251,15 @@ netcdf_report.create_variable(\
                               longName   = var_long_name, \
                               comment    = var_comment
                               )
+# - creating variable for the class/spatial units
+netcdf_report.create_variable(\
+                              ncFileName = output_netcdf_file_name, \
+                              varName    = "spatial_unit", \
+                              varUnit    = "-", \
+                              longName   = class_map_file_name + "_spatial_unit", \
+                              comment    = "The spatial unit is based on " + text_unit + "."
+                              )
+
 # - write to netcdf files
 netcdf_report.data_to_netcdf(output_netcdf_file_name, variable_name, pcr.pcr2numpy(groundwater_stress_map, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
-
+netcdf_report.data_to_netcdf(output_netcdf_file_name, variable_name, pcr.pcr2numpy(pcr.scalar(class_map) , vos.MV), timeBounds, timeStamp = None, posCnt = 0)
