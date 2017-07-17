@@ -163,7 +163,7 @@ if str(sys.argv[2]) == "pixel":    head_difference_file_name = "/scratch/shared/
 # - index for the necdf input file
 i_time = 0
  
-for year in range(start_year, end_year, 1):
+for year in range(start_year, end_year + 1, 1):
     #
     end_month = 12
     if year == end_year: end_month = 11
