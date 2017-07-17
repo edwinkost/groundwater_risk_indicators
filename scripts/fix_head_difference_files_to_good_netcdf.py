@@ -184,8 +184,8 @@ for year in range(start_year, end_year, 1):
         netcdf_report.data_to_netcdf(output_netcdf_file_name, "spatial_unit", pcr.pcr2numpy(pcr.scalar(spatial_unit) , vos.MV), timeBounds, timeStamp = None, posCnt = i_time)
         #
         # - groundwater_head_difference_values
-        head_difference = netcdf2PCRobjClone(head_difference_file_name, "groundwater_head_dif", i_time - 1,\
-                                             True)
+        head_difference = vos.netcdf2PCRobjClone(head_difference_file_name, "groundwater_head_dif", i_time - 1,\
+                                                 True)
         head_difference = pcr.ifthen(landmask, head_difference)
         head_difference = pcr.areamaximum(head_difference, spatial_unit)
         netcdf_report.data_to_netcdf(output_netcdf_file_name, "groundwater_head_changes", pcr.pcr2numpy(head_difference, vos.MV), timeBounds, timeStamp = None, posCnt = i_time)
