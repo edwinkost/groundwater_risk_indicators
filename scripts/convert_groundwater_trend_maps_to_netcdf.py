@@ -206,7 +206,7 @@ if str(sys.argv[2]) == "drainage": r_squared_file_name = "/scratch/shared/edwinh
 if str(sys.argv[2]) == "aquifer":  r_squared_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Aquifer/R_Aquifers.map"
 r_squared = pcr.ifthen(landmask, pcr.readmap(r_squared_file_name))
 r_squared = pcr.areamaximum(r_squared, spatial_unit)
-netcdf_report.data_to_netcdf(output_netcdf_file_name, "r_squared", pcr.pcr2numpy(r_squared, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
+netcdf_report.data_to_netcdf(output_netcdf_file_name, "r-squared", pcr.pcr2numpy(r_squared, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
 #
 # - p-value
 if str(sys.argv[2]) == "state":    p_value_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/States/P_slope_states_.map"
