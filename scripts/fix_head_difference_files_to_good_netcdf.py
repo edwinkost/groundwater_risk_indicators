@@ -142,7 +142,7 @@ netcdf_report.create_variable(\
 variable_name = var_name
 var_long_name = "monthly_groundwater_head_changes"
 variable_unit = "m.month-1"
-var_comment   = "Monthly groundwater head changes. Positive values indicate that groundwater heads are higher then their previous values."
+var_comment   = "Monthly groundwater head changes. Positive values indicate increasing groundwater heads."
 # - creating variable 
 netcdf_report.create_variable(\
                               ncFileName = output_netcdf_file_name, \
