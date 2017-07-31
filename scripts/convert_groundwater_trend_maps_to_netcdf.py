@@ -193,25 +193,25 @@ spatial_unit = pcr.ifthen(landmask, class_map)
 netcdf_report.data_to_netcdf(output_netcdf_file_name, "spatial_unit", pcr.pcr2numpy(pcr.scalar(spatial_unit) , vos.MV), timeBounds, timeStamp = None, posCnt = 0)
 #
 # - slope_of_decline
-if str(sys.argv[2]) == "state":    slope_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/States/Slope_States_cm_yr.map"
-if str(sys.argv[2]) == "drainage": slope_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Hybas/Slope_Hybas6_cm_yr.map"
-if str(sys.argv[2]) == "aquifer":  slope_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Aquifer/Slope_Aquifers_cm_yr.map"
+if str(sys.argv[2]) == "state":    slope_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/States/Slope_States_cm_yr.map"
+if str(sys.argv[2]) == "drainage": slope_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Hybas/Slope_Hybas6_cm_yr.map"
+if str(sys.argv[2]) == "aquifer":  slope_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Aquifer/Slope_Aquifers_cm_yr.map"
 slope_of_decline = pcr.ifthen(landmask, pcr.readmap(slope_file_name))
 slope_of_decline = pcr.areamaximum(slope_of_decline, spatial_unit)
 netcdf_report.data_to_netcdf(output_netcdf_file_name, "slope_of_decline", pcr.pcr2numpy(slope_of_decline, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
 #
 # - r-squared
-if str(sys.argv[2]) == "state":    r_squared_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/States/R_States.map"
-if str(sys.argv[2]) == "drainage": r_squared_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Hybas/R_Hybas.map"
-if str(sys.argv[2]) == "aquifer":  r_squared_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Aquifer/R_Aquifers.map"
+if str(sys.argv[2]) == "state":    r_squared_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/States/R_States.map"
+if str(sys.argv[2]) == "drainage": r_squared_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Hybas/R_Hybas.map"
+if str(sys.argv[2]) == "aquifer":  r_squared_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Aquifer/R_Aquifers.map"
 r_squared = pcr.ifthen(landmask, pcr.readmap(r_squared_file_name))
 r_squared = pcr.areamaximum(r_squared, spatial_unit)
 netcdf_report.data_to_netcdf(output_netcdf_file_name, "r-squared", pcr.pcr2numpy(r_squared, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
 #
 # - p-value
-if str(sys.argv[2]) == "state":    p_value_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/States/P_slope_states_.map"
-if str(sys.argv[2]) == "drainage": p_value_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Hybas/P_slope_hybas_.map"
-if str(sys.argv[2]) == "aquifer":  p_value_file_name = "/scratch/shared/edwinhs/data_from_sandra/GTDT_Maps/Aquifer/P_slope_aquifer.map"
+if str(sys.argv[2]) == "state":    p_value_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/States/P_slope_states_.map"
+if str(sys.argv[2]) == "drainage": p_value_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Hybas/P_slope_hybas_.map"
+if str(sys.argv[2]) == "aquifer":  p_value_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GTDT_Maps/Aquifer/P_slope_aquifer.map"
 p_value = pcr.ifthen(landmask, pcr.readmap(p_value_file_name))
 p_value = pcr.areamaximum(p_value, spatial_unit)
 netcdf_report.data_to_netcdf(output_netcdf_file_name, "p-value", pcr.pcr2numpy(p_value, vos.MV), timeBounds, timeStamp = None, posCnt = 0)
