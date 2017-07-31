@@ -153,10 +153,10 @@ netcdf_report.create_variable(\
                               )
 
 # netcdf input file:
-if str(sys.argv[2]) == "state":    head_difference_file_name = "/scratch/shared/edwinhs/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_States.nc"
-if str(sys.argv[2]) == "drainage": head_difference_file_name = "/scratch/shared/edwinhs/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_hybas6.nc"
-if str(sys.argv[2]) == "aquifer":  head_difference_file_name = "/scratch/shared/edwinhs/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_aquifer.nc"
-if str(sys.argv[2]) == "pixel":    head_difference_file_name = "/scratch/shared/edwinhs/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_pixel.nc"
+if str(sys.argv[2]) == "state":    head_difference_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_States.nc"
+if str(sys.argv[2]) == "drainage": head_difference_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_hybas6.nc"
+if str(sys.argv[2]) == "aquifer":  head_difference_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_aquifer.nc"
+if str(sys.argv[2]) == "pixel":    head_difference_file_name = "/scratch-shared/edwinhs/groundwater_risk_indicators_wri_deltares_july_2017/data_from_sandra/GW_Differences_Relative_1990/GW_Head_Difference_pixel.nc"
 
 
 # write variables to netcdf files
