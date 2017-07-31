@@ -86,12 +86,12 @@ class OutputNetCDF():
         date_time.units = 'Days since 1901-01-01' 
         date_time.calendar = 'gregorian'
         date_time.standard_name = 'time'
-        date_time.long_name = 'Days since 1900-01-01 00:00:00'
+        date_time.long_name = 'Days since 1901-01-01 00:00:00'
         date_time.bounds = 'time_bounds'
         
         # time bounds
         time_bounds = rootgrp.createVariable('time_bounds', 'f8', ('time', 'nv',))
-        time_bounds.units = 'Days since 1900-01-01 00:00:00'
+        time_bounds.units = 'Days since 1901-01-01 00:00:00'
         
         # latitude
         lat = rootgrp.createVariable('lat', 'f4', ('lat',))
